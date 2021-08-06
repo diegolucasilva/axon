@@ -3,12 +3,14 @@ import com.example.productservice.adapter.`in`.command.CreateProductCommand
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 import javax.validation.Valid
 
 
 @RestController
+@RequestMapping("/products")
 class ProductsController(private val commandGateway: CommandGateway) {
 
     @PostMapping

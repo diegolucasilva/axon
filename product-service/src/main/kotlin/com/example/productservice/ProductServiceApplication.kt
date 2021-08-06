@@ -21,9 +21,9 @@ class ProductServiceApplication{
 
 	@Autowired
 	fun eventProcessingConfigurer(config: EventProcessingConfigurer){
-		//config.registerListenerInvocationErrorHandler("products-group", {conf -> PropagatingErrorHandler.instance()})
-		//config.registerListenerInvocationErrorHandler("products-group") { PropagatingErrorHandler.instance() }
-		config.registerListenerInvocationErrorHandler("products-group") { ProductServiceEventsErrorHandler() }
+		//config.registerListenerInvocationErrorHandler("product-group", {conf -> PropagatingErrorHandler.instance()})
+		//config.registerListenerInvocationErrorHandler("product-group") { PropagatingErrorHandler.instance() }
+		config.registerListenerInvocationErrorHandler("product-group") { ProductServiceEventsErrorHandler() }
 	}
 }
 fun main(args: Array<String>) {

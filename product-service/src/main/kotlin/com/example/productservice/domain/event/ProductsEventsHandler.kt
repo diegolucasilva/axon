@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 import java.lang.IllegalArgumentException
 
 @Component
-@ProcessingGroup("products-group")
+@ProcessingGroup("product-group")
 class ProductsEventsHandler(private val productRepository: ProductRepository) {
 
 
@@ -35,6 +35,6 @@ class ProductsEventsHandler(private val productRepository: ProductRepository) {
         val productEntity = productCreatedEvent.toProductEntity()
         productRepository.save(productEntity)
 
-        throw Exception("Forcing exception in the Event handler to see the rollback process")
+        //throw Exception("Forcing exception in the Event handler to see the rollback process")
     }
 }

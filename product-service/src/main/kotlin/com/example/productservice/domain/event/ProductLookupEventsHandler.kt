@@ -11,7 +11,7 @@ import org.axonframework.eventhandling.EventHandler
 import org.springframework.stereotype.Component
 
 @Component
-@ProcessingGroup("products-group")
+@ProcessingGroup("product-group")
 class ProductLookupEventsHandler(private val productLookupRepository: ProductLookupRepository) {
 
     @EventHandler
