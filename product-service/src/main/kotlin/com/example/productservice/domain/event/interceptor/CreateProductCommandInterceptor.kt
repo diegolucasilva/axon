@@ -1,6 +1,6 @@
 package com.example.productservice.domain.event.interceptor
 
-import com.example.productservice.adapter.`in`.command.CreateProductCommand
+import com.example.productservice.adapter.command.CreateProductCommand
 import com.example.productservice.domain.port.out.persistence.ProductLookupRepository
 import org.axonframework.commandhandling.CommandMessage
 import org.axonframework.messaging.MessageDispatchInterceptor

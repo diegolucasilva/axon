@@ -23,7 +23,7 @@ class ProductServiceApplication{
 	fun eventProcessingConfigurer(config: EventProcessingConfigurer){
 		//config.registerListenerInvocationErrorHandler("product-group", {conf -> PropagatingErrorHandler.instance()})
 		//config.registerListenerInvocationErrorHandler("product-group") { PropagatingErrorHandler.instance() }
-		config.registerListenerInvocationErrorHandler("product-group") { ProductServiceEventsErrorHandler() }
+		config.registerListenerInvocationErrorHandler("products-group") { ProductServiceEventsErrorHandler() }
 	}
 }
 fun main(args: Array<String>) {

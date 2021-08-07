@@ -1,6 +1,7 @@
-package com.example.productservice.domain.event
+package com.example.productservice.domain.event.query
 
-import com.example.productservice.domain.event.query.ProductCreatedEvent
+import com.example.productservice.domain.event.ProductCreatedEvent
+import com.example.productservice.domain.event.ProductReservedEvent
 import com.example.productservice.domain.mapper.toProductEntity
 import com.example.productservice.domain.port.out.persistence.ProductRepository
 import org.axonframework.config.ProcessingGroup
@@ -36,5 +37,13 @@ class ProductsEventsHandler(private val productRepository: ProductRepository) {
         productRepository.save(productEntity)
 
         //throw Exception("Forcing exception in the Event handler to see the rollback process")
+    }
+
+    @EventHandler
+    fun on(productReservedEvent: ProductReservedEvent){
+        productRepository.findById(productReservedEvent.productId).ifPresent{
+            it.quantity -= productReservedEvent.quantity
+            productRepository.save(it)
+        }
     }
 }

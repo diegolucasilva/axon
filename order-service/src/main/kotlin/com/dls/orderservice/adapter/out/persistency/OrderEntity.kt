@@ -1,6 +1,6 @@
 package com.dls.orderservice.adapter.out.persistency
 
-import com.dls.orderservice.adapter.`in`.command.OrderStatus
+import com.dls.orderservice.adapter.`in`.command.CreateOrderCommand
 import java.util.*
 import javax.persistence.*
 
@@ -10,9 +10,9 @@ data class OrderEntity (
     @Column(unique = true)
     val orderId: UUID,
     val userId: UUID,
-    val productId: String,
+    val productId: UUID,
     val addressId: String,
     val quantity: Int,
     @Enumerated(EnumType.STRING)
-    val orderStatus: OrderStatus
+    val orderStatus: CreateOrderCommand.OrderStatus
 )

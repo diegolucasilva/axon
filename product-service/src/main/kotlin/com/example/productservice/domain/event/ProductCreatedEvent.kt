@@ -1,4 +1,4 @@
-package com.example.productservice.domain.event.query
+package com.example.productservice.domain.event
 
 import java.util.*
 
