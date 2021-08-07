@@ -13,8 +13,13 @@ class ProductsQueryHandler(private val productRepository: ProductRepository) {
 
     @QueryHandler
     fun findProducts(findProductsQuery: FindProductsQuery): List<ProductModel>{
+        logger.info("QueryHandler FindProductsQuery")
         val productsEntity = productRepository.findAll()
         return productsEntity.toProductsModel()
+    }
+
+    companion object {
+        private val logger = org.slf4j.LoggerFactory.getLogger(ProductsQueryHandler::class.java)
     }
 
 }

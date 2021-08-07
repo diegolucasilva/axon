@@ -28,6 +28,8 @@ internal class ProductAggregate(){
 
     @CommandHandler
     constructor(createProductCommand: CreateProductCommand) : this() {
+        logger.info("CommandHandler CreateProductCommand ${createProductCommand.productId}")
+
         if(createProductCommand.price < 1.0)
             throw  IllegalArgumentException("Price small than 1.0")
 
@@ -40,7 +42,7 @@ internal class ProductAggregate(){
 
     @CommandHandler
     fun handle(reservedProductCommand: ReserveProductCommand){
-        logger.info("ProductAggregate ReserveProductCommand ${reservedProductCommand.orderId}")
+        logger.info("CommandHandler ReserveProductCommand ${reservedProductCommand.orderId}")
 
         if(quantity < reservedProductCommand.quantity)
             throw  IllegalArgumentException("Insufficient numbers of items in stock")
@@ -54,6 +56,7 @@ internal class ProductAggregate(){
 
     @EventSourcingHandler
     fun on(productCreatedEvent: ProductCreatedEvent){
+        logger.info("EventSourcingHandler ProductCreatedEvent ${productCreatedEvent.productId}")
         productId = productCreatedEvent.productId
         price = productCreatedEvent.price
         title = productCreatedEvent.title
@@ -62,6 +65,7 @@ internal class ProductAggregate(){
 
     @EventSourcingHandler
     fun on(productReservedEvent: ProductReservedEvent){
+        logger.info("EventSourcingHandler ProductReservedEvent ${productReservedEvent.productId}")
         quantity -= productReservedEvent.quantity
     }
 

@@ -16,11 +16,11 @@ import java.util.concurrent.CompletableFuture
 class UsersQueryController(private val queryGateway: QueryGateway) {
 
     @GetMapping("/{userId}/payment-details")
-    fun getUserPaymentDetails(@PathVariable userId: String): CompletableFuture<User> {
+    fun getUserPaymentDetails(@PathVariable userId: String): User {
         val query = FetchUserPaymentDetailsQuery(UUID.fromString(userId))
         return queryGateway.query(
             FetchUserPaymentDetailsQuery(UUID.fromString(userId)),
             ResponseTypes.instanceOf(User::class.java)
-        )
+        ).join()
     }
 }

@@ -14,5 +14,5 @@ data class OrderEntity (
     val addressId: String,
     val quantity: Int,
     @Enumerated(EnumType.STRING)
-    val orderStatus: CreateOrderCommand.OrderStatus
+    var orderStatus: CreateOrderCommand.OrderStatus
 )

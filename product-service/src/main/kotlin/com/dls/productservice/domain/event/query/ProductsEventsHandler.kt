@@ -1,5 +1,6 @@
 package com.dls.productservice.domain.event.query
 
+import com.dls.productservice.domain.aggregate.ProductAggregate
 import com.dls.productservice.domain.event.ProductCreatedEvent
 import com.dls.productservice.domain.event.ProductReservedEvent
 import com.dls.productservice.domain.mapper.toProductEntity
@@ -17,6 +18,8 @@ class ProductsEventsHandler(private val productRepository: ProductRepository) {
 
     @ExceptionHandler(resultType = Exception::class)
     fun handle(exception: Exception){
+        logger.error("ExceptionHandler ExceptionHandler")
+
         //log error, treat exception, rollback transaction. Only exceptions throws by this class
         /*
             if axon.eventhandling.processors.product-group.mode=subscribing
@@ -28,11 +31,14 @@ class ProductsEventsHandler(private val productRepository: ProductRepository) {
 
     @ExceptionHandler(resultType = IllegalArgumentException::class)
     fun handle(exception: IllegalArgumentException){
+        logger.error("ExceptionHandler IllegalArgumentException")
+
         //log error, treat exception, rollback transaction. Only exceptions throws by this class
     }
 
     @EventHandler
     fun on(productCreatedEvent: ProductCreatedEvent){
+        logger.info("EventHandler ProductCreatedEvent ${productCreatedEvent.productId}")
         val productEntity = productCreatedEvent.toProductEntity()
         productRepository.save(productEntity)
 
@@ -41,9 +47,14 @@ class ProductsEventsHandler(private val productRepository: ProductRepository) {
 
     @EventHandler
     fun on(productReservedEvent: ProductReservedEvent){
+        logger.info("EventHandler ProductReservedEvent ${productReservedEvent.productId}")
         productRepository.findById(productReservedEvent.productId).ifPresent{
             it.quantity -= productReservedEvent.quantity
             productRepository.save(it)
         }
+    }
+
+    companion object {
+        private val logger = org.slf4j.LoggerFactory.getLogger(ProductsEventsHandler::class.java)
     }
 }

@@ -1,6 +1,8 @@
 package com.dls.orderservice.domain.agregate
 
+import com.dls.orderservice.adapter.`in`.command.ApproveOrderCommand
 import com.dls.orderservice.adapter.`in`.command.CreateOrderCommand
+import com.dls.orderservice.domain.event.OrderApprovedEvent
 import com.dls.orderservice.domain.event.OrderCreatedEvent
 import com.dls.orderservice.domain.mapper.toOrderCreatedEvent
 import org.axonframework.commandhandling.CommandHandler
@@ -14,7 +16,7 @@ import kotlin.properties.Delegates
 
 
 @Aggregate
-class OrderAggregate {
+class OrderAggregate() {
     @AggregateIdentifier
     private lateinit var orderId: UUID
     private lateinit var userId: UUID
@@ -25,13 +27,23 @@ class OrderAggregate {
 
 
     @CommandHandler
-    constructor(createOrderCommand: CreateOrderCommand){
+    constructor(createOrderCommand: CreateOrderCommand) : this() {
+        logger.info("CommandHandler CreateOrderCommand to order ${createOrderCommand.orderId}")
         val orderCreatedEvent = createOrderCommand.toOrderCreatedEvent()
         AggregateLifecycle.apply(orderCreatedEvent);
     }
 
+    @CommandHandler
+    fun handle(approveOrderCommand: ApproveOrderCommand){
+        logger.info("CommandHandler ApproveOrderCommand to order ${approveOrderCommand.orderId}")
+        val orderApprovedEvent = OrderApprovedEvent(approveOrderCommand.orderId)
+        AggregateLifecycle.apply(orderApprovedEvent);
+
+    }
+
     @EventSourcingHandler
     fun on(orderCreatedEvent: OrderCreatedEvent) {
+        logger.info("EventSourcingHandler OrderCreatedEvent to order ${orderCreatedEvent.orderId}")
         orderId = orderCreatedEvent.orderId
         productId = orderCreatedEvent.productId
         userId = orderCreatedEvent.userId
@@ -39,6 +51,16 @@ class OrderAggregate {
         quantity = orderCreatedEvent.quantity
         orderStatus = orderCreatedEvent.orderStatus
     }
+
+
+    @EventSourcingHandler
+    fun on(orderApprovedEvent: OrderApprovedEvent) {
+        logger.info("EventSourcingHandler OrderApprovedEvent to order ${orderApprovedEvent.orderId}")
+
+        orderStatus = orderApprovedEvent.orderStatus
+    }
+
+
 
     companion object {
         private val logger = LoggerFactory.getLogger(OrderAggregate::class.java)
