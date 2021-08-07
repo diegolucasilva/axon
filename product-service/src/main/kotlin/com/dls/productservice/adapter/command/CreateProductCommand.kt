@@ -5,7 +5,7 @@ import java.util.*
 
 data class CreateProductCommand(
     @TargetAggregateIdentifier
-    var productId: UUID,
-    var title:String,
-    var price:Double,
-    var quantity: Int)
+    val productId: UUID,
+    val title:String,
+    val price:Double,
+    val quantity: Int)

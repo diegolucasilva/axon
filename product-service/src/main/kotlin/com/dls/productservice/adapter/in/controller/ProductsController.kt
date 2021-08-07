@@ -22,21 +22,7 @@ class ProductsController(private val commandGateway: CommandGateway) {
             title = request.title,
             productId = UUID.randomUUID()
         )
-
-      /*  val reserveProductCommand = ReserveProductCommand.
-        builder().
-        productId(UUID.fromString("728add14-546d-449a-a4bd-69a59a25b77e")).
-        orderId(UUID.randomUUID()).
-        userId(UUID.randomUUID()).
-        quantity(1).
-        build()
-        val reserveProductCommand = ReserveProductCommand(
-            productId= UUID.fromString("728add14-546d-449a-a4bd-69a59a25b77e"),
-            orderId = UUID.randomUUID(),
-            userId = UUID.randomUUID(),
-            quantity = 1
-            )*/
-        commandGateway.sendAndWait<ReserveProductCommand>(createProductCommand)
+        commandGateway.sendAndWait<CreateProductCommand>(createProductCommand)
     }
 
 }

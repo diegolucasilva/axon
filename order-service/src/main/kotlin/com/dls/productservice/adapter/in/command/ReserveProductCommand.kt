@@ -5,7 +5,7 @@ import java.util.*
 
 data class ReserveProductCommand(
     @TargetAggregateIdentifier
-    var productId: UUID,
-    var orderId: UUID,
-    var userId: UUID,
-    var quantity: Int)
+    val productId: UUID,
+    val orderId: UUID,
+    val userId: UUID,
+    val quantity: Int)

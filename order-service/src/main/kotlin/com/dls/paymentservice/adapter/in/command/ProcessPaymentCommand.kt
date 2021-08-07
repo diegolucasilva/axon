@@ -6,15 +6,15 @@ import java.util.*
 data class ProcessPaymentCommand(
 
     @TargetAggregateIdentifier
-    var paymentId: UUID,
-    var orderId: UUID,
-    var paymentDetails: PaymentDetails
+    val paymentId: UUID,
+    val orderId: UUID,
+    val paymentDetails: PaymentDetails
 ){
     data class PaymentDetails(
-        var name: String,
-        var cardNumber: String,
-        var validUntilMonth: Int,
-        var validUntilYear: Int,
-        var cvv: String
+        val name: String,
+        val cardNumber: String,
+        val validUntilMonth: Int,
+        val validUntilYear: Int,
+        val cvv: String
     )
 }

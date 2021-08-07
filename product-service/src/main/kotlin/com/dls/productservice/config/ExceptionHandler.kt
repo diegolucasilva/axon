@@ -1,7 +1,9 @@
 package com.dls.productservice.config
 
+import com.dls.productservice.domain.event.interceptor.CreateProductCommandInterceptor
 import org.axonframework.commandhandling.CommandExecutionException
 import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -15,7 +17,7 @@ import java.lang.IllegalArgumentException
 
 @ControllerAdvice
 @Component
-class ExceptionHandler(private val logger: Logger){
+class ExceptionHandler(){
 
     @ExceptionHandler(Throwable::class)
     fun handleException(ex: Throwable): ResponseEntity<ErrorResponse> {
@@ -48,5 +50,9 @@ class ExceptionHandler(private val logger: Logger){
     private fun getDefaultResponseMessage(message: String? = null, httpStatus: HttpStatus) : ResponseEntity<ErrorResponse> {
         val errorMessage = message ?: "Service unavailable"
         return ResponseEntity.status(httpStatus).body(ErrorResponse(description = errorMessage))
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(CreateProductCommandInterceptor::class.java)
     }
 }

@@ -58,10 +58,7 @@ class OrderSaga() {
 
         commandGateway?.send<ReserveProductCommand, Any>(reserveProductCommand,
             { commandMessage: CommandMessage<out ReserveProductCommand>, commandResultMessage: CommandResultMessage<*> ->
-                if (commandResultMessage.isExceptional) {
-                    logger.error("Result ${commandResultMessage}")
-                }
-                logger.error("Result ${commandResultMessage}")
+                logger.info("Result ${commandResultMessage}")
             })
     }
 
