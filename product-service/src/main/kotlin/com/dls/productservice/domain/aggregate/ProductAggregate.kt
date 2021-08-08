@@ -1,10 +1,13 @@
 package com.dls.productservice.domain.aggregate
 
+import com.dls.productservice.adapter.`in`.command.CancelProductReservationCommand
 import com.dls.productservice.adapter.`in`.command.ReserveProductCommand
 import com.dls.productservice.adapter.command.CreateProductCommand
 import com.dls.productservice.domain.event.ProductCreatedEvent
+import com.dls.productservice.domain.event.ProductReservationCancelledEvent
 import com.dls.productservice.domain.event.ProductReservedEvent
 import com.dls.productservice.domain.mapper.toProductCreatedEvent
+import com.dls.productservice.domain.mapper.toProductReservationCancelledEvent
 import com.dls.productservice.domain.mapper.toProductReservedEvent
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
@@ -50,8 +53,15 @@ internal class ProductAggregate(){
         val productReservedEvent = reservedProductCommand.toProductReservedEvent()
 
         AggregateLifecycle.apply(productReservedEvent)
+    }
 
+    @CommandHandler
+    fun handle(cancelProductReservationCommand: CancelProductReservationCommand){
+        logger.info("CommandHandler CancelProductReservationCommand ${cancelProductReservationCommand.orderId}")
 
+        val productReservationCancelledEvent = cancelProductReservationCommand.toProductReservationCancelledEvent()
+
+        AggregateLifecycle.apply(productReservationCancelledEvent)
     }
 
     @EventSourcingHandler
@@ -67,6 +77,12 @@ internal class ProductAggregate(){
     fun on(productReservedEvent: ProductReservedEvent){
         logger.info("EventSourcingHandler ProductReservedEvent ${productReservedEvent.productId}")
         quantity -= productReservedEvent.quantity
+    }
+
+    @EventSourcingHandler
+    fun on(productReservationCancelledEvent: ProductReservationCancelledEvent){
+        logger.info("EventSourcingHandler ProductReservationCancelledEvent ${productReservationCancelledEvent.productId}")
+        quantity += productReservationCancelledEvent.quantity
     }
 
     companion object {

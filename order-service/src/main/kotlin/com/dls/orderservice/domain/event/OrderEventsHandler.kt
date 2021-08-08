@@ -13,14 +13,23 @@ class OrderEventsHandler(private  val orderRepository: OrderRepository) {
 
     @EventHandler
     fun on(event: OrderCreatedEvent) {
-        logger.info("OrderEventsHandler OrderCreatedEvent to order ${event.orderId}")
+        logger.info("EventHandler OrderCreatedEvent to order ${event.orderId}")
         val orderEntity = event.toOrderEntity()
         orderRepository.save(orderEntity)
     }
 
     @EventHandler
     fun on(event: OrderApprovedEvent) {
-        logger.info("OrderApprovedEvent OrderApprovedEvent to order ${event.orderId}")
+        logger.info("EventHandler OrderApprovedEvent to order ${event.orderId}")
+        orderRepository.findById(event.orderId).ifPresent {
+            it.orderStatus = event.orderStatus
+            orderRepository.save(it)
+        }
+    }
+
+    @EventHandler
+    fun on(event: OrderRejectedEvent) {
+        logger.info("EventHandler OrderRejectedEvent to order ${event.orderId}")
         orderRepository.findById(event.orderId).ifPresent {
             it.orderStatus = event.orderStatus
             orderRepository.save(it)

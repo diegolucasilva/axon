@@ -2,6 +2,7 @@ package com.dls.productservice.domain.event.query
 
 import com.dls.productservice.domain.aggregate.ProductAggregate
 import com.dls.productservice.domain.event.ProductCreatedEvent
+import com.dls.productservice.domain.event.ProductReservationCancelledEvent
 import com.dls.productservice.domain.event.ProductReservedEvent
 import com.dls.productservice.domain.mapper.toProductEntity
 import com.dls.productservice.domain.port.out.persistence.ProductRepository
@@ -50,6 +51,15 @@ class ProductsEventsHandler(private val productRepository: ProductRepository) {
         logger.info("EventHandler ProductReservedEvent ${productReservedEvent.productId}")
         productRepository.findById(productReservedEvent.productId).ifPresent{
             it.quantity -= productReservedEvent.quantity
+            productRepository.save(it)
+        }
+    }
+
+    @EventHandler
+    fun on(productReservationCancelledEvent: ProductReservationCancelledEvent){
+        logger.info("EventHandler ProductReservationCancelledEvent ${productReservationCancelledEvent.productId}")
+        productRepository.findById(productReservationCancelledEvent.productId).ifPresent{
+            it.quantity += productReservationCancelledEvent.quantity
             productRepository.save(it)
         }
     }

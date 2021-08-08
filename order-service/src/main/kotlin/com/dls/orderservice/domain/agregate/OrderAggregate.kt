@@ -2,8 +2,10 @@ package com.dls.orderservice.domain.agregate
 
 import com.dls.orderservice.adapter.`in`.command.ApproveOrderCommand
 import com.dls.orderservice.adapter.`in`.command.CreateOrderCommand
+import com.dls.orderservice.adapter.`in`.command.RejectOrderCommand
 import com.dls.orderservice.domain.event.OrderApprovedEvent
 import com.dls.orderservice.domain.event.OrderCreatedEvent
+import com.dls.orderservice.domain.event.OrderRejectedEvent
 import com.dls.orderservice.domain.mapper.toOrderCreatedEvent
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
@@ -38,7 +40,13 @@ class OrderAggregate() {
         logger.info("CommandHandler ApproveOrderCommand to order ${approveOrderCommand.orderId}")
         val orderApprovedEvent = OrderApprovedEvent(approveOrderCommand.orderId)
         AggregateLifecycle.apply(orderApprovedEvent);
+    }
 
+    @CommandHandler
+    fun handle(rejectOrderCommand: RejectOrderCommand){
+        logger.info("CommandHandler RejectOrderCommand to order ${rejectOrderCommand.orderId}")
+        val orderRejectedEvent = OrderRejectedEvent(orderId =rejectOrderCommand.orderId, reason =rejectOrderCommand.reason)
+        AggregateLifecycle.apply(orderRejectedEvent);
     }
 
     @EventSourcingHandler
@@ -52,15 +60,17 @@ class OrderAggregate() {
         orderStatus = orderCreatedEvent.orderStatus
     }
 
-
     @EventSourcingHandler
     fun on(orderApprovedEvent: OrderApprovedEvent) {
         logger.info("EventSourcingHandler OrderApprovedEvent to order ${orderApprovedEvent.orderId}")
-
         orderStatus = orderApprovedEvent.orderStatus
     }
 
-
+    @EventSourcingHandler
+    fun on(orderRejectedEvent: OrderRejectedEvent) {
+        logger.info("EventSourcingHandler OrderRejectedEvent to order ${orderRejectedEvent.orderId}")
+        orderStatus = orderRejectedEvent.orderStatus
+    }
 
     companion object {
         private val logger = LoggerFactory.getLogger(OrderAggregate::class.java)
