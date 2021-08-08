@@ -19,7 +19,7 @@ import java.lang.IllegalArgumentException
 import java.util.*
 import kotlin.properties.Delegates
 
-@Aggregate
+@Aggregate(snapshotTriggerDefinition = "productSnapshotTriggerDefinition")
 internal class ProductAggregate(){
 
     @AggregateIdentifier

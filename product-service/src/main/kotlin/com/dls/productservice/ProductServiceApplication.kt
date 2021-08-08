@@ -4,10 +4,15 @@ import com.dls.productservice.domain.event.interceptor.CreateProductCommandInter
 import com.dls.productservice.domain.event.interceptor.ProductServiceEventsErrorHandler
 import org.axonframework.commandhandling.CommandBus
 import org.axonframework.config.EventProcessingConfigurer
+import org.axonframework.eventsourcing.AbstractSnapshotter
+import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition
+import org.axonframework.eventsourcing.SnapshotTriggerDefinition
+import org.axonframework.eventsourcing.Snapshotter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContext
+import org.springframework.context.annotation.Bean
 
 @SpringBootApplication
 class ProductServiceApplication{
@@ -23,6 +28,10 @@ class ProductServiceApplication{
 		//config.registerListenerInvocationErrorHandler("product-group") { PropagatingErrorHandler.instance() }
 		config.registerListenerInvocationErrorHandler("products-group") { ProductServiceEventsErrorHandler() }
 	}
+
+	@Bean(name= ["productSnapshotTriggerDefinition"])
+	fun productSnapshotTriggerDefinition(snapshotter: Snapshotter) =
+		EventCountSnapshotTriggerDefinition(snapshotter, 3)
 }
 fun main(args: Array<String>) {
 	runApplication<ProductServiceApplication>(*args)

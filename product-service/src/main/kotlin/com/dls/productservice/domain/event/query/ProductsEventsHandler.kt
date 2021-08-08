@@ -8,6 +8,7 @@ import com.dls.productservice.domain.mapper.toProductEntity
 import com.dls.productservice.domain.port.out.persistence.ProductRepository
 import org.axonframework.config.ProcessingGroup
 import org.axonframework.eventhandling.EventHandler
+import org.axonframework.eventhandling.ResetHandler
 import org.axonframework.messaging.interceptors.ExceptionHandler
 import org.springframework.stereotype.Component
 import java.lang.IllegalArgumentException
@@ -62,6 +63,12 @@ class ProductsEventsHandler(private val productRepository: ProductRepository) {
             it.quantity += productReservationCancelledEvent.quantity
             productRepository.save(it)
         }
+    }
+
+    @ResetHandler  //used to reset database to replay the events
+    fun reset(){
+        logger.info("ResetHandler ProductsEventsHandler")
+        productRepository.deleteAll()
     }
 
     companion object {
